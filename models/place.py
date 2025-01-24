@@ -29,7 +29,6 @@ class Place(BaseModel, Base):
         @property
         def reviews(self):
             """ Getter attribute that returns the list of Review instances """
-            return [
-                review for review in models.storage.all(Review).values()
-                if review.place_id == self.id
-            ]
+            all_reviews = list(models.storage.all(Review))
+            review_list = [i for i in all_reviews if i.place_id == self.id]
+            return review_list
