@@ -17,6 +17,12 @@ def create_amenity(name):
     storage.new(new_amenity)
     storage.save()
 
+def parse(line):
+    """Parses the line into command and args"""
+    command = line.split()[0]
+    args = line.split()[1:]
+    return command, args
+
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
