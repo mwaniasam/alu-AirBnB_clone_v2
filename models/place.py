@@ -30,4 +30,9 @@ class Place(BaseModel, Base):
     else:
         @property
         def reviews(self):
-            return [review for review in models.storage.all(Review).values() if review.place_id == self.id]
+            """ Get a list of all linked reviews """
+            review_list = []
+            for review in list(models.storage.all(Review).values()):
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
