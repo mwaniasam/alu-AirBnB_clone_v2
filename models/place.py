@@ -3,9 +3,20 @@
 from os import getenv
 from sqlalchemy import (Column, String,
                          ForeignKey, Float,
-                         Integer)
+                         Integer, Table)
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
+import models
+from models.review import Review
+from models.amenity import Amenity
+
+linked_table = Table('place_amenity', Base.metadata,
+                     Column('place_id', String(60),
+                            ForeignKey('places.id'),
+                            primary_key=True, nullable=False),
+                     Column('amenity_id', String(60),
+                            ForeignKey('amenities.id'),
+                            primary_key=True, nullable=False)) 
 
 
 class Place(BaseModel, Base):
@@ -22,19 +33,27 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
+    reviews = relationship("Review", backref="place", cascade="all, delete")
+    amenities = relationship("Amenity", secondary="place_amenity", viewonly=False)
     amenity_ids = []
 
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
-        reviews = relationship("Review", backref="place", cascade="all, delete-orphan")
-    else:
+    if getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def reviews(self):
-            """ Get a list of all linked reviews """
-            import models
-            from models import storage
-            from models.review import Review
-            review_list = []
-            for review in list(models.storage.all(Review).values()):
-                if review.place_id == self.id:
-                    review_list.append(review)
-            return review_list  
+            """Getter for reviews"""
+            all_reviews = list(models.storage.all(Review).values())
+            review_list = [review for review in all_reviews if review.place_id == self.id]
+            return review_list
+
+        @property
+        def amenities(self):
+            """Getter for amenities"""
+            all_amenities = list(models.storage.all(Amenity).values())
+            amenity_list = [amenity for amenity in all_amenities if amenity.id in self.amenity_ids]
+            return amenity_list
+        
+        @amenities.setter
+        def amenities(self, value):
+            """Setter for amenities"""
+            if isinstance(value, Amenity):
+                self.amenity_ids.append(value.id)
