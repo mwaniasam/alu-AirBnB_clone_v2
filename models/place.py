@@ -28,7 +28,7 @@ class Place(BaseModel, Base):
         reviews = relationship("Review", backref="place", cascade="all, delete-orphan")
     else:
         @property
-        def get_reviews(self):
+        def reviews(self):
             """ Get a list of all linked reviews """
             import models
             from models import storage
