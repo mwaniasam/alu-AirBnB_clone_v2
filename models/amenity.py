@@ -11,3 +11,9 @@ class Amenity(BaseModel, Base):
     id = Column(String(60), primary_key=True)
     name = Column(String(128), nullable=False)
     place_amenities = relationship("Place", secondary="place_amenity", viewonly=True)
+
+    def __init__(self, *args, **kwargs):
+        """ Initialize Amenity Object """
+        super().__init__(*args, **kwargs)
+        if 'name' in kwargs:
+            self.name = kwargs['name']
