@@ -11,6 +11,11 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
+def create_amenity(name):
+    """ Creates a new Amenity instance and saves it to db """
+    new_amenity = Amenity(name=name)
+    storage.new(new_amenity)
+    storage.save()
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
