@@ -22,15 +22,12 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    _reviews = relationship("Review", backref="place", cascade="all, delete")
+    reviews = relationship("Review", backref="place", cascade="all, delete")
     amenity_ids = []
 
-    if getenv('HBNB_TYPE_STORAGE') != 'db':
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        reviews = relationship("Review", backref="place", delete-orphan)
+    else:
         @property
         def reviews(self):
-            """ Getter attribute that returns the list of Review instances """
-            review_list = []
-            for review in models.storage.all(Review).values():
-                if review.place_id == self.id:
-                    review_list.append(review)
-            return review_list
+            return [review for review in models.storage.all(Review).values() if review.place_id == self.id]
