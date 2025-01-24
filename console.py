@@ -47,12 +47,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
 
-        # Create an instance and set attributes
-        new_instance = self.classes[class_name]()
+        # Ensure mandatory attributes like `name` are provided for specific classes
+        mandatory_attributes = {
+            "Amenity": ["name"],
+        }
+
+        # Parse attributes from arguments
+        attributes = {}
         for attr_pair in args[1:]:
             if '=' in attr_pair:
                 key, value = attr_pair.split('=', 1)
-                # Convert value to appropriate type
                 if value.startswith('"') and value.endswith('"'):
                     value = value.strip('"').replace('_', ' ')
                 elif '.' in value:
@@ -65,7 +69,19 @@ class HBNBCommand(cmd.Cmd):
                         value = int(value)
                     except ValueError:
                         continue
-                setattr(new_instance, key, value)
+                attributes[key] = value
+
+        # Check for missing mandatory attributes
+        if class_name in mandatory_attributes:
+            for attr in mandatory_attributes[class_name]:
+                if attr not in attributes:
+                    print(f"** missing required attribute: {attr} **")
+                    return
+
+        # Create the instance and set attributes
+        new_instance = self.classes[class_name]()
+        for key, value in attributes.items():
+            setattr(new_instance, key, value)
         new_instance.save()
         print(new_instance.id)
 
