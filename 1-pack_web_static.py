@@ -4,7 +4,16 @@ from datetime import datetime
 import os
 
 def do_pack():
-    """Generates a .tgz archive from the contents of the web_static folder."""
+    """
+    Generates a .tgz archive from the contents of the web_static folder.
+	
+    - Creates a `versions` directory if it doesn't exist.
+    - The archive name is in the format `web_static_<year><month><day><hour><minute><second>.tgz`.
+    - The archive contains all files inside `web_static`.
+
+    Returns:
+        str: The archive path if successful, otherwise None.
+    """
 
     # Create versions directory if it doesn't exist
     if not os.path.exists("versions"):
