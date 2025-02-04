@@ -33,7 +33,7 @@ sudo sed -i "/server_name _;/a location /hbnb_static/ { \
 }" /etc/nginx/sites-available/default
 
 # Restart Nginx to apply changes
-sudo systemctl restart nginx
+sudo service nginx restart
 
 # Exit successfully
 exit 0
