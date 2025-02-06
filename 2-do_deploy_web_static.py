@@ -9,7 +9,7 @@ import re
 
 # Set Fabric environment variables
 env.user = "ubuntu"
-env.hosts = ["54.89.172.80", "54.82.194.92"]
+env.hosts = ["100.27.221.22", "44.220.133.229"]
 env.key_filename = '~/.ssh/id_rsa'
 
 
