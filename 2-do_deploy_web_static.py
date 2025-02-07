@@ -2,15 +2,15 @@
 """
 Fabric script that distributes an archive to web servers.
 """
+
 from fabric.api import env, put, run
 from os.path import exists
 import os
-import re
 
 # Set Fabric environment variables
 env.user = "ubuntu"
 env.hosts = ["100.27.221.227", "44.220.133.229"]
-env.key_filename = '~/.ssh/id_rsa'
+env.key_filename = "~/.ssh/id_rsa"
 
 
 def do_deploy(archive_path):
@@ -30,23 +30,23 @@ def do_deploy(archive_path):
     try:
         # Extract filename and folder name
         filename = os.path.basename(archive_path)
-        folder_name = "/data/web_static/releases/{}".format(filename.split('.')[0])
+        folder_name = f"/data/web_static/releases/{filename.split('.')[0]}"
 
         # Upload archive to /tmp/ on the web server
-        put(archive_path, "/tmp/{}".format(filename))
+        put(archive_path, f"/tmp/{filename}")
 
         # Ensure the release folder exists
-        run("mkdir -p {}".format(folder_name))
+        run(f"mkdir -p {folder_name}")
 
         # Extract archive and clean up
-        run("tar -xzf /tmp/{} -C {}".format(filename, folder_name))
-        run("rm /tmp/{}".format(filename))
-        run("mv {}/web_static/* {}".format(folder_name, folder_name))
-        run("rm -rf {}/web_static".format(folder_name))
+        run(f"tar -xzf /tmp/{filename} -C {folder_name}")
+        run(f"rm /tmp/{filename}")
+        run(f"mv {folder_name}/web_static/* {folder_name}")
+        run(f"rm -rf {folder_name}/web_static")
 
         # Update symbolic link
         run("rm -rf /data/web_static/current")
-        run("ln -s {} /data/web_static/current".format(folder_name))
+        run(f"ln -s {folder_name} /data/web_static/current")
 
         # Ensure Nginx serves the new version
         run("sudo mkdir -p /var/www/html/hbnb_static")
@@ -56,5 +56,5 @@ def do_deploy(archive_path):
         return True
 
     except Exception as e:
-        print("Deployment failed: {}".format(e))
+        print(f"Deployment failed: {e}")
         return False
