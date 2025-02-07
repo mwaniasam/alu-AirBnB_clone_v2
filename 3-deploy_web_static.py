@@ -1,11 +1,14 @@
 #!/usr/bin/python3
+
 """
 Fabric script that creates and distributes an archive to web servers.
 """
 
+
 from fabric.api import env, put, run, local
 from datetime import datetime
 from os.path import exists
+
 
 # Set Fabric environment variables
 env.user = "ubuntu"
@@ -14,12 +17,14 @@ env.key_filename = "~/.ssh/id_rsa"
 
 
 def do_pack():
+
     """
     Generates a .tgz archive from the web_static directory.
 
     Returns:
         str: Archive path if successful, None otherwise.
     """
+
     try:
         local("mkdir -p versions")
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -32,6 +37,7 @@ def do_pack():
 
 
 def do_deploy(archive_path):
+
     """
     Deploys the archive to the web servers.
 
@@ -41,6 +47,7 @@ def do_deploy(archive_path):
     Returns:
         bool: True if deployment succeeds, False otherwise.
     """
+
     if not exists(archive_path):
         print("Error: Archive file does not exist.")
         return False
@@ -72,12 +79,14 @@ def do_deploy(archive_path):
 
 
 def deploy():
+
     """
     Full deployment: Creates an archive and deploys it.
 
     Returns:
         bool: True if deployment is successful, False otherwise.
     """
+
     archive_path = do_pack()
     if not archive_path:
         return False
