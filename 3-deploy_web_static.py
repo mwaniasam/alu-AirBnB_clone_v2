@@ -1,14 +1,11 @@
 #!/usr/bin/python3
-
 """
 Fabric script that creates and distributes an archive to web servers.
 """
 
-
 from fabric.api import env, put, run, local
 from datetime import datetime
 from os.path import exists
-
 
 # Set Fabric environment variables
 env.user = "ubuntu"
@@ -17,14 +14,18 @@ env.key_filename = "~/.ssh/id_rsa"
 
 
 def do_pack():
-
     """
-    Generates a .tgz archive from the web_static directory.
+    Creates a compressed archive of the web_static directory.
+
+    This function:
+    - Ensures the 'versions/' directory exists.
+    - Creates a .tgz archive of 'web_static' with a timestamp.
+    - Stores the archive in the 'versions/' folder.
 
     Returns:
-        str: Archive path if successful, None otherwise.
+        str: The path to the created archive if successful.
+        None: If the archive creation fails.
     """
-
     try:
         local("mkdir -p versions")
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -37,17 +38,22 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-
     """
-    Deploys the archive to the web servers.
+    Deploys an archive to the web servers.
+
+    This function:
+    - Checks if the provided archive exists.
+    - Uploads the archive to the /tmp/ directory on remote servers.
+    - Extracts its content into a new release folder in /data/web_static/releases/.
+    - Removes unnecessary files and directories.
+    - Updates the symbolic link to point to the new deployment.
 
     Args:
-        archive_path (str): Path to the .tgz archive.
+        archive_path (str): The local path to the .tgz archive file.
 
     Returns:
-        bool: True if deployment succeeds, False otherwise.
+        bool: True if deployment is successful, False otherwise.
     """
-
     if not exists(archive_path):
         print("Error: Archive file does not exist.")
         return False
@@ -79,14 +85,18 @@ def do_deploy(archive_path):
 
 
 def deploy():
-
     """
-    Full deployment: Creates an archive and deploys it.
+    Performs a full deployment by creating and distributing an archive.
+
+    This function:
+    - Calls do_pack() to generate a new archive.
+    - If archive creation fails, it returns False.
+    - Calls do_deploy() to upload and extract the archive on the servers.
+    - Returns the result of do_deploy().
 
     Returns:
-        bool: True if deployment is successful, False otherwise.
+        bool: True if deployment succeeds, False otherwise.
     """
-
     archive_path = do_pack()
     if not archive_path:
         return False
