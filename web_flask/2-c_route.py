@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-Flask web application that starts a web server.
+"""Flask web application that starts a web server.
 
 Routes:
 - `/` : Displays "Hello HBNB!"
