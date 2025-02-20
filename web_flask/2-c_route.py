@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-""" 
+"""
 Flask web application that starts a web server.
 
 Routes:
 - `/` : Displays "Hello HBNB!"
 - `/hbnb` : Displays "HBNB"
-- `/c/<text>` : Displays "C " followed by the value of `<text>`, 
+- `/c/<text>` : Displays "C " followed by the value of `<text>`,
   replacing underscores (`_`) with spaces.
 
 The application listens on `0.0.0.0`, port `5000`.
@@ -36,3 +36,4 @@ def c_text(text):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
