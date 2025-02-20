@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Flask web application that starts a web server.
+""" Flask web application that starts a web server.
 
 Routes:
 - `/` : Displays "Hello HBNB!"
@@ -7,8 +7,7 @@ Routes:
 - `/c/<text>` : Displays "C " followed by the value of `<text>`,
   replacing underscores (`_`) with spaces.
 
-The application listens on `0.0.0.0`, port `5000`.
-"""
+The application listens on `0.0.0.0`, port `5000`. """
 
 from flask import Flask
 
